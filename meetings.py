@@ -1,7 +1,6 @@
 import datetime
 import requests
 import re
-import os
 import subprocess
 
 
@@ -103,10 +102,6 @@ def playlist(song_nums, page=""):
     top = '<?xml version="1.0" encoding="UTF-8"?><playlist xmlns="http://xspf.org/ns/0/" xmlns:vlc="http://www.videolan.org/vlc/playlist/ns/0/" version="1"><title>Playlist</title><trackList>'
     bottom = ' </trackList><extension application="http://www.videolan.org/vlc/playlist/0"><vlc:item tid="0"/></extension></playlist>'
 
-    newfile.insert(0, top)
-    newfile.insert(1, listToString(line))
-    newfile.insert(2, bottom)
-    lines = listToString(newfile)
 
 
     if page:
@@ -117,12 +112,14 @@ def playlist(song_nums, page=""):
         for img in imgs:
             images.append("<track><location>https://wol.jw.org/" + page[img+11:img+42].split("\"", 1)[0] + "</location></track>")
 
-        pics = listToString(images)
+        line.insert(2, listToString(images))
 
 
-        found = lines.find(" </trackList>")
-        lines = lines[:found] + pics + lines[found:]
+    newfile.insert(0, top)
+    newfile.insert(1, listToString(line))
+    newfile.insert(2, bottom)
 
+    lines = listToString(newfile)
 
     with open(my_file + "Meeting.xspf", 'w') as file:
         file.writelines(lines)
