@@ -93,7 +93,10 @@ def playlist(song_nums, page=""):
         print("Problem fetching song numbers")
         exit(1)
 
-    my_file = os.getcwd() + "/"
+    direc = __file__
+
+    x = direc.rfind("/")
+    my_file = direc[0:x + 1]
 
     newfile = []
     line = ["<track><location>{}/sjjm_E_{}_r720P.mp4</location></track>".format(my_file + "Songs", s.zfill(3)) for s in song_nums]
