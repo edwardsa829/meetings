@@ -5,6 +5,12 @@ __pycache__/
 
 # C extensions
 *.so
+.idea/
+Songs/*
+!Songs/.gitkeep
+
+4_5888912372025788814.pdf
+Meeting.xspf
 
 # Distribution / packaging
 .Python
