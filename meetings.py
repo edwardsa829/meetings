@@ -98,7 +98,7 @@ def playlist(song_nums, page=""):
     my_file = direc[0:x + 1]
 
     newfile = []
-    line = ["<track><location>{}/sjjm_E_{}_r720P.mp4</location></track>".format(my_file + "Songs", s.zfill(3)) for s in song_nums]
+    line = ["<track><location>Songs/sjjm_E_{}_r720P.mp4</location></track>".format(s.zfill(3)) for s in song_nums]
     top = '<?xml version="1.0" encoding="UTF-8"?><playlist xmlns="http://xspf.org/ns/0/" xmlns:vlc="http://www.videolan.org/vlc/playlist/ns/0/" version="1"><title>Playlist</title><trackList>'
     bottom = ' </trackList><extension application="http://www.videolan.org/vlc/playlist/0"><vlc:item tid="0"/></extension></playlist>'
 
