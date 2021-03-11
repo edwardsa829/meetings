@@ -6,8 +6,7 @@ __pycache__/
 # C extensions
 *.so
 .idea/
-Songs/*
-!Songs/README.md
+Songs
 
 4_5888912372025788814.pdf
 Meeting.xspf
