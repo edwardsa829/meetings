@@ -7,6 +7,8 @@ __pycache__/
 *.so
 .idea/
 Songs
+.DS_store
+.vscode
 
 4_5888912372025788814.pdf
 Meeting.xspf
