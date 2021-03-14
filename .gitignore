@@ -9,9 +9,8 @@ __pycache__/
 Songs
 .DS_store
 .vscode
-
-4_5888912372025788814.pdf
 Meeting.xspf
+test.py
 
 # Distribution / packaging
 .Python
