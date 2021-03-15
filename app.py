@@ -14,10 +14,15 @@ class JWMeetings(rumps.App):
     def __init__(self):
         super(JWMeetings, self).__init__("JW Meetings")
         self.title = "JWM"
-        self.menu = ["Generate Playlist", "Download Songs", "Software Update"]
+        self.menu = [
+            "Generate Playlist        ", 
+            "Download Songs           ", 
+            "-------------------------", 
+            "Software Update          "
+        ]
 
 
-    @rumps.clicked("Generate Playlist")
+    @rumps.clicked("Generate Playlist        ")
     def playlists(self, _):
 
         self.title = "Loading"
@@ -74,7 +79,7 @@ class JWMeetings(rumps.App):
         
 
 
-    @rumps.clicked("Download Songs")
+    @rumps.clicked("Download Songs           ")
     def download_songs(self, _):
 
         self.title = "Loading"
@@ -111,9 +116,15 @@ class JWMeetings(rumps.App):
 
 
 
-    @rumps.clicked("Software Update")
+    @rumps.clicked("Software Update          ")
     def updates(self, _):
-        print("Looking for updates")
+
+        response = requests.get("https://api.github.com/repos/edwardsa829/JWMeetings/releases").json()
+        latest = response[0]["tag_name"]
+
+        return 0
+
+
         
 
 

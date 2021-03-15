@@ -11,6 +11,7 @@ Songs
 .vscode
 Meeting.xspf
 test.py
+setup.py
 
 # Distribution / packaging
 .Python
