@@ -8,6 +8,7 @@ from os import path
 import re
 import subprocess
 import plistlib
+import os
 
 
 class JWMeetings(rumps.App):
@@ -138,15 +139,13 @@ class JWMeetings(rumps.App):
         else:
             res = rumps.alert("A new version is available:", f"{current} => {latest}\n\nWould you like to donwload it now?", ok="Yes", cancel="No")
 
-            if res == 1:
+            # if res == 1:
 
-                link = f"https://jw-meetings.s3.eu-central-1.amazonaws.com/versions/JW_Meetings-{latest}.pkg.zip"
+            #     link = f"https://jw-meetings.s3.eu-central-1.amazonaws.com/versions/JW_Meetings-{latest}.pkg.zip"
 
-                f = f"JW_Meetings-{latest}.pkg.zip"
+            #     f = f"JW_Meetings-{latest}.pkg.zip"
 
-                urllib.request.urlretrieve(link, f)
-
-                #subprocess.call(["open", my_file + f])
+            #     urllib.request.urlretrieve(link, f)
 
         return 0
 
