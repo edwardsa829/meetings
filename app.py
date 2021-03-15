@@ -7,6 +7,7 @@ import os.path
 from os import path
 import re
 import subprocess
+import plistlib
 
 
 class JWMeetings(rumps.App):
@@ -33,7 +34,7 @@ class JWMeetings(rumps.App):
         today = now.strftime("%A")
         schedule = now.strftime("%Y/%m/%d")
 
-        today = ""
+        #today = "Sunday"
 
         if today in weekend:
             window = rumps.Window(dimensions=(80, 30))
@@ -44,11 +45,11 @@ class JWMeetings(rumps.App):
 
             for x in initial:
                 if not x.isdigit():
-                    rumps.alert("There was a problem with the initial song number")
+                    rumps.alert("Error", "There was a problem with the initial song number")
                     return 1
 
             if not initial:
-                rumps.alert("There was a problem with the initial song number")
+                rumps.alert("Error", "There was a problem with the initial song number")
                 return 1
 
         
@@ -59,7 +60,7 @@ class JWMeetings(rumps.App):
 
         if response.status_code != 200:
             print("There was a problem while loading the schedule")
-            rumps.alert("There was a problem while loading the schedule")
+            rumps.alert("Error", "There was a problem while loading the schedule")
 
         content = str(response.text)
 
@@ -103,7 +104,7 @@ class JWMeetings(rumps.App):
 
             self.title = "JWM"
 
-            rumps.alert("All the songs were downloaded successfully!")
+            rumps.alert("Success!", "All the songs were downloaded successfully!")
 
             return 0
 
@@ -122,11 +123,35 @@ class JWMeetings(rumps.App):
         response = requests.get("https://api.github.com/repos/edwardsa829/JWMeetings/releases").json()
         latest = response[0]["tag_name"]
 
+        try:
+            with open('../Info.plist', 'rb') as file:
+                plist_data = plistlib.load(file)
+        except:
+            res = rumps.alert("Error", "There was a problem processing the request")
+
+
+        current = plist_data["CFBundleVersion"]
+
+        if current == latest:
+            rumps.alert("", "You are up to date!")
+
+        else:
+            res = rumps.alert("A new version is available:", f"{current} => {latest}\n\nWould you like to donwload it now?", ok="Yes", cancel="No")
+
+            if res == 1:
+
+                link = f"https://jw-meetings.s3.eu-central-1.amazonaws.com/versions/JW_Meetings-{latest}.pkg.zip"
+
+                f = f"JW_Meetings-{latest}.pkg.zip"
+
+                urllib.request.urlretrieve(link, f)
+
+                #subprocess.call(["open", my_file + f])
+
         return 0
 
 
         
-
 
 
 
@@ -157,7 +182,7 @@ class Meetings(object):
 
             if len(song_nums) != 3:
                 print("Problem fetching song numbers")
-                rumps.alert("There was a problem fetching the song numbers")
+                rumps.alert("Error", "There was a problem fetching the song numbers")
                 return 1
 
             direc = __file__
@@ -215,7 +240,7 @@ class Meetings(object):
 
         if len(data) != 1:
             print("Couldn't find a Song")
-            rumps.alert("There was a problem fetching a song number")
+            rumps.alert("Error", "There was a problem fetching a song number")
             return 1
 
         wt_data = int(data[0]) + 22000
@@ -226,7 +251,7 @@ class Meetings(object):
 
         if article.status_code != 200:
             print("Problem loading article")
-            rumps.alert("There was a problem loading the WT article")
+            rumps.alert("Error", "There was a problem loading the WT article")
             return 1
 
         wt = str(article.text)
@@ -268,7 +293,7 @@ class Meetings(object):
 
             if len(song_nums) != 3:
                 print("Problem fetching song numbers")
-                rumps.alert("There was a problem fetching a song number")
+                rumps.alert("Error", "There was a problem fetching a song number")
                 return 1
 
             direc = __file__
