@@ -141,11 +141,15 @@ class JWMeetings(rumps.App):
 
             # if res == 1:
 
+            #     self.title = "Loading"
+
             #     link = f"https://jw-meetings.s3.eu-central-1.amazonaws.com/versions/JW_Meetings-{latest}.pkg.zip"
 
             #     f = f"JW_Meetings-{latest}.pkg.zip"
 
             #     urllib.request.urlretrieve(link, f)
+
+            #     self.title = "JWM"
 
         return 0
 
