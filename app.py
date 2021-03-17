@@ -9,6 +9,7 @@ import re
 import subprocess
 import plistlib
 import os
+import urllib3
 
 
 class JWMeetings(rumps.App):
@@ -35,7 +36,7 @@ class JWMeetings(rumps.App):
         today = now.strftime("%A")
         schedule = now.strftime("%Y/%m/%d")
 
-        #today = "Sunday"
+        # today = "Sunday"
 
         if today in weekend:
             window = rumps.Window(dimensions=(80, 30))
@@ -46,24 +47,28 @@ class JWMeetings(rumps.App):
 
             for x in initial:
                 if not x.isdigit():
+                    self.title = "JWM"
                     rumps.alert("Error", "There was a problem with the initial song number")
                     return 1
 
             if not initial:
+                self.title = "JWM"
                 rumps.alert("Error", "There was a problem with the initial song number")
                 return 1
 
         
-        rumps.notification("Loading...", "Please wait. This will take about a minute!", "")
+        rumps.notification("Loading...", "Please wait. This will take a few seconds!", "")
         
+        http = urllib3.PoolManager()
+        response = http.request('GET', f"https://wol.jw.org/en/wol/dt/r1/lp-e/{schedule}")
 
-        response = requests.get(f"https://wol.jw.org/en/wol/dt/r1/lp-e/{schedule}")
-
-        if response.status_code != 200:
+        if response.status != 200:
             print("There was a problem while loading the schedule")
+            self.title = "JWM"
             rumps.alert("Error", "There was a problem while loading the schedule")
+            return 1
 
-        content = str(response.text)
+        content = str(response.data.decode('utf-8'))
 
         if today in weekend:
             a = Meetings(content, initial)
@@ -101,7 +106,13 @@ class JWMeetings(rumps.App):
             for x in range(1, 152, 1):
                 time.sleep(3)
                 print(f"Downloading video for song number {x}")
-                urllib.request.urlretrieve(lines[x], my_file + "Songs/" + lines[x][-21:-1])
+                try:
+                    urllib.request.urlretrieve(lines[x], my_file + "Songs/" + lines[x][-21:-1])
+                except:
+                    os.system("rm -r Songs")
+                    self.title = "JWM"
+                    rumps.alert("Error", "There was an error with one of the downloads. Make sure you have a stable internet connection or try again later.")
+                    return 1
 
             self.title = "JWM"
 
@@ -121,35 +132,50 @@ class JWMeetings(rumps.App):
     @rumps.clicked("Software Update          ")
     def updates(self, _):
 
-        response = requests.get("https://api.github.com/repos/edwardsa829/JWMeetings/releases").json()
-        latest = response[0]["tag_name"]
+        self.title = "Loading"
+
+        try:
+            response = requests.get("https://api.github.com/repos/edwardsa829/JWMeetings/releases").json()
+            latest = response[0]["tag_name"]
+        except:
+            self.title = "JWM"
+            rumps.alert("Error", "There was a problem processing the request. Make sure you are connected to the internet or try again later.")
+            return 1
 
         try:
             with open('../Info.plist', 'rb') as file:
                 plist_data = plistlib.load(file)
         except:
-            res = rumps.alert("Error", "There was a problem processing the request")
+            self.title = "JWM"
+            rumps.alert("Error", "There was a problem processing the request")
+            return 0
 
 
         current = plist_data["CFBundleVersion"]
 
         if current == latest:
-            rumps.alert("", "You are up to date!")
+            self.title = "JWM"
+            rumps.alert("You are up to date!")
 
         else:
+            self.title = "JWM"
             res = rumps.alert("A new version is available:", f"{current} => {latest}\n\nWould you like to donwload it now?", ok="Yes", cancel="No")
 
-            # if res == 1:
+            if res == 1:
 
-            #     self.title = "Loading"
+                self.title = "Loading"
 
-            #     link = f"https://jw-meetings.s3.eu-central-1.amazonaws.com/versions/JW_Meetings-{latest}.pkg.zip"
+                link = f"https://jw-meetings.s3.eu-central-1.amazonaws.com/versions/{latest}/Resources.zip"
 
-            #     f = f"JW_Meetings-{latest}.pkg.zip"
+                urllib.request.urlretrieve(link, "Resources.zip")
 
-            #     urllib.request.urlretrieve(link, f)
-
-            #     self.title = "JWM"
+                os.system('unzip Resources.zip')
+                os.system('cp -Rf Resources/* .')
+                os.system('cp -R Info.plist ..')
+                os.system('rm Info.plist Resources.zip')
+                os.system('rm -r Resources')
+                self.title = "JWM"
+                rumps.alert("Done!", "Restart the app to complete the update.")
 
         return 0
 
@@ -185,6 +211,7 @@ class Meetings(object):
 
             if len(song_nums) != 3:
                 print("Problem fetching song numbers")
+                self.title = "JWM"
                 rumps.alert("Error", "There was a problem fetching the song numbers")
                 return 1
 
@@ -243,6 +270,7 @@ class Meetings(object):
 
         if len(data) != 1:
             print("Couldn't find a Song")
+            self.title = "JWM"
             rumps.alert("Error", "There was a problem fetching a song number")
             return 1
 
@@ -250,14 +278,17 @@ class Meetings(object):
 
         link = "https://wol.jw.org/" + content[wt_data : wt_data + 28]
 
-        article = requests.get(link)
 
-        if article.status_code != 200:
+        http = urllib3.PoolManager()
+        article = http.request('GET', link)
+
+        if article.status != 200:
             print("Problem loading article")
-            rumps.alert("Error", "There was a problem loading the WT article")
-            return 1
+            self.title = "JWM"
+            rumps.alert("Error", "There was a problem loading the WT article\nYou will have to download the pictures manually for now. Sorry!")
+        else:
+            wt = str(article.data.decode('utf-8'))
 
-        wt = str(article.text)
 
         songs = [x.start() for x in re.finditer("SONG", wt)]
 
@@ -296,6 +327,7 @@ class Meetings(object):
 
             if len(song_nums) != 3:
                 print("Problem fetching song numbers")
+                self.title = "JWM"
                 rumps.alert("Error", "There was a problem fetching a song number")
                 return 1
 
@@ -356,6 +388,7 @@ class Meetings(object):
 
 
 
+        http = urllib3.PoolManager()
 
         content = self.content
 
@@ -369,7 +402,13 @@ class Meetings(object):
 
         treasures_link = jw + content[treasures_link : treasures_link + 32]
 
-        treasures_content = str(requests.get(treasures_link).text)
+        try:
+            treasures_content = str(http.request('GET', treasures_link).data.decode('utf-8'))
+        except:
+            print("Broken link")
+            self.title = "JWM"
+            rumps.alert("Error", "There was a problem processing the requests")
+            return 1
 
         treasures_imgs = [x.start() for x in re.finditer('<img src="', treasures_content)]
 
@@ -402,7 +441,15 @@ class Meetings(object):
         try:
             ministry_link = jw + content[ministry_link : ministry_link + 30]
 
-            ministry_content = str(requests.get(ministry_link).text)
+            http = urllib3.PoolManager()
+
+            try:
+                ministry_content = str(http.request('GET', ministry_link).data.decode('utf-8'))
+            except:
+                print("Broken link")
+                self.title = "JWM"
+                rumps.alert("Error", "There was a problem processing the requests")
+                return 1
 
             ministry_imgs = [x.start() for x in re.finditer('<img src="', ministry_content)]
 
@@ -438,7 +485,7 @@ class Meetings(object):
 
         for link in living_links:
             try:
-                living_content = str(requests.get(link).text)
+                living_content = str(http.request('GET', link).data.decode('utf-8'))
                 living_imgs = [x.start() for x in re.finditer('<img src="', living_content)]
 
                 for pic in living_imgs:
@@ -485,7 +532,13 @@ class Meetings(object):
 
         bs_links[0] = bs_links[0].replace('"', "")
 
-        response1 = str(requests.get(bs_links[0]).text)
+        try:
+            response1 = str(http.request('GET', bs_links[0]).data.decode('utf-8'))
+        except:
+            print("Broken link")
+            self.title = "JWM"
+            rumps.alert("Error", "There was a problem processing the requests")
+            return 1
 
         section_start = [x.start() for x in re.finditer(f"<strong>{str(paras[0])}. </strong>", response1)]
         try:
@@ -534,7 +587,14 @@ class Meetings(object):
             bs_pics.append(jw + section[pic + 10 : pic + 40])
 
         if len(bs_links) > 1:
-            response2 = str(requests.get(bs_links[1]).text)
+
+            try:
+                response2 = str(http.request('GET', bs_links[1]).data.decode('utf-8'))
+            except:
+                print("Broken link")
+                self.title = "JWM"
+                rumps.alert("Error", "There was a problem processing the requests")
+                return 1
 
             box_imgs = [x.start() for x in re.finditer('<img src="', response2)]
 
