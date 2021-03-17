@@ -1,5 +1,5 @@
 import os
-if os.system('python3 -m pip install -r requirements.txt') == 0:
+if os.system('python3.7 -m pip install -r requirements.txt') == 0:
     print("Downloaded packages")
 else:
     print("\nERROR: Make sure you are connected to the internet!\n")
