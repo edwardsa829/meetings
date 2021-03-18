@@ -28,7 +28,39 @@ class JWMeetings(rumps.App):
     @rumps.clicked("Generate Playlist        ")
     def playlists(self, _):
 
-        self.title = "Loading"
+        time.sleep(1)
+
+        try:
+            response = requests.get("https://api.github.com/repos/edwardsa829/JWMeetings/releases").json()
+            latest = response[0]["tag_name"]
+
+            with open('../Info.plist', 'rb') as file:
+                plist_data = plistlib.load(file)
+
+            current = plist_data["CFBundleVersion"]
+
+            if current != latest:
+
+                res = rumps.alert("A new version is available:", f"{current} => {latest}\n\nWould you like to install it?", ok="Yes", cancel="Not now")
+
+                if res == 1:
+
+                    link = f"https://jw-meetings.s3.eu-central-1.amazonaws.com/versions/{latest}/Resources.zip"
+
+                    urllib.request.urlretrieve(link, "Resources.zip")
+
+                    os.system('unzip Resources.zip')
+                    os.system('cp -Rf Resources/* .')
+                    os.system('cp -R Info.plist ..')
+                    os.system('rm Info.plist Resources.zip')
+                    os.system('rm -r Resources')
+                    rumps.alert("Done!", "Restart the app to complete the update.")
+
+                    return 0
+
+        except:
+            pass
+
 
         weekend = ["Saturday", "Sunday"]
 
@@ -45,26 +77,21 @@ class JWMeetings(rumps.App):
             window.ok = "Submit"
             initial = str(window.run().text)
 
-            for x in initial:
-                if not x.isdigit():
-                    self.title = "JWM"
-                    rumps.alert("Error", "There was a problem with the initial song number")
-                    return 1
-
             if not initial:
-                self.title = "JWM"
                 rumps.alert("Error", "There was a problem with the initial song number")
                 return 1
 
-        
-        rumps.notification("Loading...", "Please wait. This will take a few seconds!", "")
+            for x in initial:
+                if not x.isdigit():
+                    rumps.alert("Error", "There was a problem with the initial song number")
+                    return 1
+
         
         http = urllib3.PoolManager()
         response = http.request('GET', f"https://wol.jw.org/en/wol/dt/r1/lp-e/{schedule}")
 
         if response.status != 200:
             print("There was a problem while loading the schedule")
-            self.title = "JWM"
             rumps.alert("Error", "There was a problem while loading the schedule")
             return 1
 
@@ -77,7 +104,6 @@ class JWMeetings(rumps.App):
             a = Meetings(content)
             a.midweek()
 
-        self.title = "JWM"
         rumps.notification("Done!", "Playlist created. Enjoy your meeting!", "")
 
         return 0
@@ -89,7 +115,6 @@ class JWMeetings(rumps.App):
     @rumps.clicked("Download Songs           ")
     def download_songs(self, _):
 
-        self.title = "Loading"
         
         direc = __file__
 
@@ -100,29 +125,33 @@ class JWMeetings(rumps.App):
             lines = file.readlines()
 
         if not path.exists(my_file + "Songs"):
-            os.mkdir(my_file + "Songs")
-            rumps.alert("Loading...", "This could take a while...\nYou will be notified when all the downloads are complete.")
+            res = rumps.alert("This could take a while...", "Videos will be downloaded at the highest quality available - 720p\n You will be notified when all the downloads are complete.", ok="Proceed", cancel="Cancel")
 
-            for x in range(1, 152, 1):
-                time.sleep(3)
-                print(f"Downloading video for song number {x}")
-                try:
-                    urllib.request.urlretrieve(lines[x], my_file + "Songs/" + lines[x][-21:-1])
-                except:
-                    os.system("rm -r Songs")
-                    self.title = "JWM"
-                    rumps.alert("Error", "There was an error with one of the downloads. Make sure you have a stable internet connection or try again later.")
-                    return 1
+            if res == 1:
+                os.mkdir(my_file + "Songs")
+                total_songs = 152
+                perc = [15, 30, 50, 75, 80, 95]
+                for x in range(1, total_songs, 1):
+                    for per in perc:
+                        if x == int(per*total_songs/100):
+                            rumps.notification(f"{str(per)}% downloaded", "Downloading songs", "")
 
-            self.title = "JWM"
+                    time.sleep(3)
+                    print(f"Downloading video for song number {x}")
+                    try:
+                        urllib.request.urlretrieve(lines[x], my_file + "Songs/" + lines[x][-21:-1])
+                    except:
+                        os.system("rm -r Songs")
+                        rumps.alert("Error", "There was an error with one of the downloads. Make sure you have a stable internet connection or try again later.")
+                        return 1
 
-            rumps.alert("Success!", "All the songs were downloaded successfully!")
+
+                rumps.alert("Success!", "All the songs were downloaded successfully!")
 
             return 0
 
         else:
             print("Songs are already downloaded!")
-            self.title = "JWM"
             rumps.alert("Songs are already downloaded!")
 
             return 0
@@ -132,13 +161,11 @@ class JWMeetings(rumps.App):
     @rumps.clicked("Software Update          ")
     def updates(self, _):
 
-        self.title = "Loading"
 
         try:
             response = requests.get("https://api.github.com/repos/edwardsa829/JWMeetings/releases").json()
             latest = response[0]["tag_name"]
         except:
-            self.title = "JWM"
             rumps.alert("Error", "There was a problem processing the request. Make sure you are connected to the internet or try again later.")
             return 1
 
@@ -146,7 +173,6 @@ class JWMeetings(rumps.App):
             with open('../Info.plist', 'rb') as file:
                 plist_data = plistlib.load(file)
         except:
-            self.title = "JWM"
             rumps.alert("Error", "There was a problem processing the request")
             return 0
 
@@ -154,16 +180,12 @@ class JWMeetings(rumps.App):
         current = plist_data["CFBundleVersion"]
 
         if current == latest:
-            self.title = "JWM"
             rumps.alert("You are up to date!")
 
         else:
-            self.title = "JWM"
-            res = rumps.alert("A new version is available:", f"{current} => {latest}\n\nWould you like to donwload it now?", ok="Yes", cancel="No")
+            res = rumps.alert("A new version is available:", f"{current} => {latest}\n\nWould you like to install it?", ok="Yes", cancel="Not now")
 
             if res == 1:
-
-                self.title = "Loading"
 
                 link = f"https://jw-meetings.s3.eu-central-1.amazonaws.com/versions/{latest}/Resources.zip"
 
@@ -174,7 +196,6 @@ class JWMeetings(rumps.App):
                 os.system('cp -R Info.plist ..')
                 os.system('rm Info.plist Resources.zip')
                 os.system('rm -r Resources')
-                self.title = "JWM"
                 rumps.alert("Done!", "Restart the app to complete the update.")
 
         return 0
@@ -211,7 +232,6 @@ class Meetings(object):
 
             if len(song_nums) != 3:
                 print("Problem fetching song numbers")
-                self.title = "JWM"
                 rumps.alert("Error", "There was a problem fetching the song numbers")
                 return 1
 
@@ -270,7 +290,6 @@ class Meetings(object):
 
         if len(data) != 1:
             print("Couldn't find a Song")
-            self.title = "JWM"
             rumps.alert("Error", "There was a problem fetching a song number")
             return 1
 
@@ -284,7 +303,6 @@ class Meetings(object):
 
         if article.status != 200:
             print("Problem loading article")
-            self.title = "JWM"
             rumps.alert("Error", "There was a problem loading the WT article\nYou will have to download the pictures manually for now. Sorry!")
         else:
             wt = str(article.data.decode('utf-8'))
@@ -327,7 +345,6 @@ class Meetings(object):
 
             if len(song_nums) != 3:
                 print("Problem fetching song numbers")
-                self.title = "JWM"
                 rumps.alert("Error", "There was a problem fetching a song number")
                 return 1
 
@@ -406,7 +423,6 @@ class Meetings(object):
             treasures_content = str(http.request('GET', treasures_link).data.decode('utf-8'))
         except:
             print("Broken link")
-            self.title = "JWM"
             rumps.alert("Error", "There was a problem processing the requests")
             return 1
 
@@ -447,7 +463,6 @@ class Meetings(object):
                 ministry_content = str(http.request('GET', ministry_link).data.decode('utf-8'))
             except:
                 print("Broken link")
-                self.title = "JWM"
                 rumps.alert("Error", "There was a problem processing the requests")
                 return 1
 
@@ -536,7 +551,6 @@ class Meetings(object):
             response1 = str(http.request('GET', bs_links[0]).data.decode('utf-8'))
         except:
             print("Broken link")
-            self.title = "JWM"
             rumps.alert("Error", "There was a problem processing the requests")
             return 1
 
@@ -592,7 +606,6 @@ class Meetings(object):
                 response2 = str(http.request('GET', bs_links[1]).data.decode('utf-8'))
             except:
                 print("Broken link")
-                self.title = "JWM"
                 rumps.alert("Error", "There was a problem processing the requests")
                 return 1
 
