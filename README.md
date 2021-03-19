@@ -90,6 +90,8 @@ You are now good to go!
 If you are not used to seeing code you might be asking:
 ##### WHAT DOES THIS COMMAND DO?
 
+You are running some code that will download some small pieces of software for the application to work and will build it.
+
 Going into a little bit more detail, this command downloads software packages for the Python language which are listed in the *requirements.txt* file which are necessary for the application to function. After that, the code will build making it into a usable app you can then open just by double clicking it. When this is done all the unnecessary files and folders will be deleted leaving you with just the app and this file you are reading from now. 
 This whole process should take less than a minute.
 You are then free to move the application anywhere you like on your computer. You might want to place it in your *Applications* folder for easy access.
