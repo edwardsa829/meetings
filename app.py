@@ -1,3 +1,4 @@
+#!/bin/bash
 import rumps
 import datetime
 import requests

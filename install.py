@@ -1,3 +1,4 @@
+#!/bin/bash
 import os
 if os.system('python3.7 -m pip install -r requirements.txt') == 0:
     print("Downloaded packages")
