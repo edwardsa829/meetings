@@ -74,7 +74,7 @@ Done!
 
 
 If for some reason you can’t open Terminal by right clicking on the folder you can open Terminal directly.
-You will find it in: *Applications -> Utilities*. Then you will need to navigate into the right folder where the app is. You can do this by typing cd and the path to the folder. So if for example the folder is in Downloads, do this:
+You will find it in: *Applications -> Utilities*. Then you will need to navigate into the right folder where the app is. You can do this by typing `cd` and the path to the folder. So if for example the folder is in Downloads, do this:
 ```bash
 cd Downloads/JWMeetings-main/
 ```
