@@ -5,7 +5,7 @@ python3.7 install.py py2app
 # JW Meetings
 ### A playlist generator for the meetings
 
-If you are a Jehovah’s Witness and use a Mac computer you will notice that there is no native JW Library App, especially if you are working in the AV department and have to download and prepare all the songs and pictures in advance for every meeting. This application eliminates that tedious process by doing it all for you! You will be able to create a VLC playlist containing all the media of the meeting of the current week in just a press of a button! Make sure you have VLC downloaded along with the other requirements listed below. Be sure to follow the instructions and enjoy your meeting!
+If you are a Jehovah’s Witness and use a Mac computer you will know that there is no native JW Library App, especially if you are working in the AV department and have to download and prepare all the songs and pictures in advance for every meeting. This application eliminates that tedious process by doing it all for you! You will be able to create a VLC playlist containing all the media of the meeting of the current week in just a press of a button! Make sure you have VLC downloaded along with the other requirements listed below. Be sure to follow the instructions and enjoy your meeting!
 
 ##### SYSTEM REQUIREMENTS
 

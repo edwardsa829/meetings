@@ -37,6 +37,7 @@ os.system('rm -r build __pycache__ .eggs dist')
 os.system('rm -r .git')
 os.system('rm app.py links.txt metadata.py .gitignore requirements.txt')
 os.system('rm install.py')
+print("\n\nINSTALL COMPLETE!\n\n")
 
 
 
