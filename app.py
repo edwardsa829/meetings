@@ -87,9 +87,13 @@ class JWMeetings(rumps.App):
                     rumps.alert("Error", "There was a problem with the initial song number")
                     return 1
 
-        
-        http = urllib3.PoolManager()
-        response = http.request('GET', f"https://wol.jw.org/en/wol/dt/r1/lp-e/{schedule}")
+        try:
+            http = urllib3.PoolManager()
+            response = http.request('GET', f"https://wol.jw.org/en/wol/dt/r1/lp-e/{schedule}")
+        except Exception as e:
+            print(str(e))
+            rumps.alert("Error", "There was an error with one of the downloads. Make sure you have a stable internet connection or try again later.")
+            return 1
 
         if response.status != 200:
             print("There was a problem while loading the schedule")
@@ -115,7 +119,6 @@ class JWMeetings(rumps.App):
 
     @rumps.clicked("Download Songs           ")
     def download_songs(self, _):
-
         
         direc = __file__
 
@@ -141,7 +144,8 @@ class JWMeetings(rumps.App):
                     print(f"Downloading video for song number {x}")
                     try:
                         urllib.request.urlretrieve(lines[x], my_file + "Songs/" + lines[x][-21:-1])
-                    except:
+                    except Exception as e:
+                        print(str(e))
                         os.system("rm -r Songs")
                         rumps.alert("Error", "There was an error with one of the downloads. Make sure you have a stable internet connection or try again later.")
                         return 1
