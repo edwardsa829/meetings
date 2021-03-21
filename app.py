@@ -11,6 +11,8 @@ import subprocess
 import plistlib
 import os
 import urllib3
+import webbrowser
+from inspect import currentframe
 
 
 class JWMeetings(rumps.App):
@@ -29,7 +31,10 @@ class JWMeetings(rumps.App):
     @rumps.clicked("Generate Playlist        ")
     def playlists(self, _):
 
-        time.sleep(1)
+        def get_linenumber():
+            cf = currentframe()
+            return cf.f_back.f_lineno
+
 
         try:
             response = requests.get("https://api.github.com/repos/edwardsa829/JWMeetings/releases").json()
@@ -59,7 +64,8 @@ class JWMeetings(rumps.App):
 
                     return 0
 
-        except:
+        except Exception as e:
+            print(str(e))
             pass
 
 
@@ -87,12 +93,23 @@ class JWMeetings(rumps.App):
                     rumps.alert("Error", "There was a problem with the initial song number")
                     return 1
 
+            if int(initial) > 151 or int(initial) < 1:
+                rumps.alert("Error", "There was a problem with the initial song number")
+                return 1
+
+
         try:
             http = urllib3.PoolManager()
             response = http.request('GET', f"https://wol.jw.org/en/wol/dt/r1/lp-e/{schedule}")
         except Exception as e:
             print(str(e))
-            rumps.alert("Error", "There was an error with one of the downloads. Make sure you have a stable internet connection or try again later.")
+            res = rumps.alert("Error", "Make sure you have an internet connection or try again later.\nWould you like to send a report to the developer?", ok="Send Report", cancel="Cancel")
+            if res == 1:
+                recipient = 'edwardsa829@gmail.com'
+                subject = 'JW Meeting - Error Report'
+                body = str(e) + "\n at line {}".format(str(int(get_linenumber())-9))
+                webbrowser.open('mailto:?to=' + recipient + '&subject=' + subject + '&body=' + body, new=1)
+                return 0
             return 1
 
         if response.status != 200:
@@ -119,6 +136,10 @@ class JWMeetings(rumps.App):
 
     @rumps.clicked("Download Songs           ")
     def download_songs(self, _):
+
+        def get_linenumber():
+            cf = currentframe()
+            return cf.f_back.f_lineno
         
         direc = __file__
 
@@ -140,16 +161,20 @@ class JWMeetings(rumps.App):
                         if x == int(per*total_songs/100):
                             rumps.notification(f"{str(per)}% downloaded", "Downloading songs", "")
 
-                    time.sleep(3)
                     print(f"Downloading video for song number {x}")
                     try:
                         urllib.request.urlretrieve(lines[x], my_file + "Songs/" + lines[x][-21:-1])
+                        time.sleep(3)
                     except Exception as e:
                         print(str(e))
-                        os.system("rm -r Songs")
-                        rumps.alert("Error", "There was an error with one of the downloads. Make sure you have a stable internet connection or try again later.")
+                        res = rumps.alert("Error", "There was a problem with one of the downloads. Make sure you have a stable internet connection or try again later.\nWould you like to send a report to the developer?", ok="Send Report", cancel="Cancel")
+                        if res == 1:
+                            recipient = 'edwardsa829@gmail.com'
+                            subject = 'JW Meeting - Error Report'
+                            body = str(e) + "\n at line {}".format(str(int(get_linenumber())-9))
+                            webbrowser.open('mailto:?to=' + recipient + '&subject=' + subject + '&body=' + body, new=1)
+                            return 0
                         return 1
-
 
                 rumps.alert("Success!", "All the songs were downloaded successfully!")
 
@@ -345,6 +370,11 @@ class Meetings(object):
                     str1 += ele
 
                 return str1
+                
+
+            def get_linenumber():
+                cf = currentframe()
+                return cf.f_back.f_lineno
 
 
 
@@ -410,9 +440,9 @@ class Meetings(object):
 
 
 
-        http = urllib3.PoolManager()
-
         content = self.content
+
+        http = urllib3.PoolManager()
 
         jw = "https://wol.jw.org"
 
@@ -426,9 +456,15 @@ class Meetings(object):
 
         try:
             treasures_content = str(http.request('GET', treasures_link).data.decode('utf-8'))
-        except:
-            print("Broken link")
-            rumps.alert("Error", "There was a problem processing the requests")
+        except Exception as e:
+            print(str(e))
+            res = rumps.alert("Error", "There was a problem. Make sure you have an internet connection or try again later.\nWould you like to send a report to the developer?", ok="Send Report", cancel="Cancel")
+            if res == 1:
+                recipient = 'edwardsa829@gmail.com'
+                subject = 'JW Meeting - Error Report'
+                body = str(e) + "\n at line {}".format(str(int(get_linenumber())-9))
+                webbrowser.open('mailto:?to=' + recipient + '&subject=' + subject + '&body=' + body, new=1)
+                return 0
             return 1
 
         treasures_imgs = [x.start() for x in re.finditer('<img src="', treasures_content)]
@@ -466,9 +502,15 @@ class Meetings(object):
 
             try:
                 ministry_content = str(http.request('GET', ministry_link).data.decode('utf-8'))
-            except:
-                print("Broken link")
-                rumps.alert("Error", "There was a problem processing the requests")
+            except Exception as e:
+                print(str(e))
+                res = rumps.alert("Error", "There was a problem. Make sure you are connected to the internet or try again later.\nWould you like to send a report to the developer?", ok="Send Report", cancel="Cancel")
+                if res == 1:
+                    recipient = 'edwardsa829@gmail.com'
+                    subject = 'JW Meeting - Error Report'
+                    body = str(e) + "\n at line {}".format(str(int(get_linenumber())-9))
+                    webbrowser.open('mailto:?to=' + recipient + '&subject=' + subject + '&body=' + body, new=1)
+                    return 0
                 return 1
 
             ministry_imgs = [x.start() for x in re.finditer('<img src="', ministry_content)]
@@ -554,9 +596,15 @@ class Meetings(object):
 
         try:
             response1 = str(http.request('GET', bs_links[0]).data.decode('utf-8'))
-        except:
-            print("Broken link")
-            rumps.alert("Error", "There was a problem processing the requests")
+        except Exception as e:
+            print(str(e))
+            res = rumps.alert("Error", "There was a problem. Make sure you are connected to the internet or try again later.\nWould you like to send a report to the developer?", ok="Send Report", cancel="Cancel")
+            if res == 1:
+                recipient = 'edwardsa829@gmail.com'
+                subject = 'JW Meeting - Error Report'
+                body = str(e) + "\n at line {}".format(str(int(get_linenumber())-9))
+                webbrowser.open('mailto:?to=' + recipient + '&subject=' + subject + '&body=' + body, new=1)
+                return 0
             return 1
 
         section_start = [x.start() for x in re.finditer(f"<strong>{str(paras[0])}. </strong>", response1)]
@@ -609,9 +657,15 @@ class Meetings(object):
 
             try:
                 response2 = str(http.request('GET', bs_links[1]).data.decode('utf-8'))
-            except:
-                print("Broken link")
-                rumps.alert("Error", "There was a problem processing the requests")
+            except Exception as e:
+                print(str(e))
+                res = rumps.alert("Error", "There was a problem. Make sure you are connected to the internet or try again later.\nWould you like to send a report to the developer?", ok="Send Report", cancel="Cancel")
+                if res == 1:
+                    recipient = 'edwardsa829@gmail.com'
+                    subject = 'JW Meeting - Error Report'
+                    body = str(e) + "\n at line {}".format(str(int(get_linenumber())-9))
+                    webbrowser.open('mailto:?to=' + recipient + '&subject=' + subject + '&body=' + body, new=1)
+                    return 0
                 return 1
 
             box_imgs = [x.start() for x in re.finditer('<img src="', response2)]
