@@ -35,6 +35,16 @@ class JWMeetings(rumps.App):
             cf = currentframe()
             return cf.f_back.f_lineno
 
+        direc = __file__
+
+        x = direc.rfind("/")
+        my_file = direc[0:x + 1]
+
+        if not path.exists(my_file + "Songs missing"):
+            resp = rumps.alert("Songs", "You might want to download the songs first", ok="Cancel", cancel="Ignore")
+            if resp == 1:
+                return 0
+
 
         try:
             response = requests.get("https://api.github.com/repos/edwardsa829/JWMeetings/releases").json()
