@@ -13,7 +13,7 @@ If you are a Jehovah’s Witness and use a Mac computer you will know that there
 - [VLC latest version](https://www.videolan.org/vlc/download-macosx.html)
 - [Python 3.7](https://www.python.org/downloads/release/python-379/)
 
-For this Mac application to work you will need to install VLC and Python 3.7. Only Python version 3.7 is currently supported. Find the links to download them below.
+Only Python version 3.7 is currently supported.
 
 > **Please note**: installing and running the application requires an internet connection
 
