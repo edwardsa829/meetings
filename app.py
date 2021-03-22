@@ -150,7 +150,7 @@ class JWMeetings(rumps.App):
             lines = file.readlines()
 
         if not path.exists(my_file + "Songs"):
-            res = rumps.alert("This could take a while...", "Videos will be downloaded at the highest quality available - 720p\n You will be notified when all the downloads are complete.", ok="Proceed", cancel="Cancel")
+            res = rumps.alert("The total download size is 4.5GB so this could take a while...", "Videos will be downloaded at the highest quality available - 720p\n You will be notified when all the downloads are complete.", ok="Proceed", cancel="Cancel")
 
             if res == 1:
                 os.mkdir(my_file + "Songs")
@@ -487,43 +487,34 @@ class Meetings(object):
             )
         ]
 
+
         ministry = [
             x.start()
             for x in re.finditer('href="', content[songs[0] + ministry_1[0] : songs[1]])
         ]
 
-        ministry_link = ministry[0] + 6 + songs[0] + ministry_1[0]
+        
         ministry_pics = []
+        http = urllib3.PoolManager()
 
         try:
-            ministry_link = jw + content[ministry_link : ministry_link + 30]
+            for x in range(len(ministry)):
+                ministry_link = ministry[x] + 6 + songs[0] + ministry_1[0]
+                ministry_link = jw + content[ministry_link : ministry_link + 30]
 
-            http = urllib3.PoolManager()
+                try:
+                    ministry_content = str(http.request('GET', ministry_link).data.decode('utf-8'))
+                    ministry_imgs = [x.start() for x in re.finditer('<img src="', ministry_content)]
+                    for link in range(len(ministry_pics)):
+                        if ministry_pics[link][0:3] == "/en":
+                            ministry_pics[link] = jw + ministry_pics[link]
+                        else:
+                            ministry_pics[link].remove(ministry_pics[link])
 
-            try:
-                ministry_content = str(http.request('GET', ministry_link).data.decode('utf-8'))
-            except Exception as e:
-                print(str(e))
-                res = rumps.alert("Error", "There was a problem. Make sure you are connected to the internet or try again later.\nWould you like to send a report to the developer?", ok="Send Report", cancel="Cancel")
-                if res == 1:
-                    recipient = 'edwardsa829@gmail.com'
-                    subject = 'JW Meeting - Error Report'
-                    body = str(e) + "\n at line {}".format(str(int(get_linenumber())-9))
-                    webbrowser.open('mailto:?to=' + recipient + '&subject=' + subject + '&body=' + body, new=1)
-                    return 0
-                return 1
-
-            ministry_imgs = [x.start() for x in re.finditer('<img src="', ministry_content)]
-
-            for pic in ministry_imgs:
-                ministry_pics.append(ministry_content[pic + 10 : pic + 43])
-
-            for link in range(len(ministry_pics)):
-                if ministry_pics[link][0:3] == "/en":
-                    ministry_pics[link] = jw + ministry_pics[link]
-                else:
-                    ministry_pics[link].remove(ministry_pics[link])
-        
+                    for pic in ministry_imgs:
+                        ministry_pics.append(ministry_content[pic + 10 : pic + 43])
+                except:
+                    pass
         except:
             pass
 
