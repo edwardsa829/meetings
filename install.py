@@ -35,7 +35,7 @@ setup(
 os.system('mv dist/JW\ Meetings.app .')
 os.system('rm -r build __pycache__ .eggs dist')
 os.system('rm -r .git')
-os.system('rm app.py Icon.icns links.txt metadata.py .gitignore requirements.txt')
+os.system('rm app.py Icon.icns Logo.png links.txt metadata.py .gitignore requirements.txt')
 os.system('rm install.py')
 print("\n\nINSTALL COMPLETE!\n\n")
 

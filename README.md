@@ -1,7 +1,7 @@
 ```bash
 python3.7 install.py py2app
 ```
-
+![](./Logo.png)
 # JW Meetings
 ### A playlist generator for the meetings
 
