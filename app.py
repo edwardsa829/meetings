@@ -19,7 +19,7 @@ class JWMeetings(rumps.App):
     
     def __init__(self):
         super(JWMeetings, self).__init__("JW Meetings")
-        self.title = "JWM"
+        self.icon = "Icon.icns"
         self.menu = [
             "Generate Playlist        ", 
             "Download Songs           ", 

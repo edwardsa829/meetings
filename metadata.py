@@ -3,7 +3,7 @@ APP_NAME = "JW Meetings"
 DATA_FILES = ['links.txt']
 OPTIONS = {
     'argv_emulation': True,
-    # 'iconfile': '.icns',
+    'iconfile': 'Icon.icns',
     'plist': {
         'CFBundleName': APP_NAME,
         'CFBundleDisplayName': APP_NAME,
