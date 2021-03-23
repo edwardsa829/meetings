@@ -177,6 +177,7 @@ class JWMeetings(rumps.App):
                         time.sleep(3)
                     except Exception as e:
                         print(str(e))
+                        os.system("rm -r Songs")
                         res = rumps.alert("Error", "There was a problem with one of the downloads. Make sure you have a stable internet connection or try again later.\nWould you like to send a report to the developer?", ok="Send Report", cancel="Cancel")
                         if res == 1:
                             recipient = 'edwardsa829@gmail.com'
