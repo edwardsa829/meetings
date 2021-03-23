@@ -40,11 +40,17 @@ class JWMeetings(rumps.App):
         x = direc.rfind("/")
         my_file = direc[0:x + 1]
 
-        if not path.exists(my_file + "Songs missing"):
+        if not path.exists(my_file + "Songs"):
             resp = rumps.alert("Songs", "You might want to download the songs first", ok="Cancel", cancel="Ignore")
             if resp == 1:
                 return 0
 
+        else:
+            songs = os.listdir("Songs")
+            if len(songs) < 151:
+                resp = rumps.alert("Songs missing", "There seem to be some missing songs..", ok="Cancel", cancel="Ignore")
+                if resp == 1:
+                    return 0
 
         try:
             response = requests.get("https://api.github.com/repos/edwardsa829/JWMeetings/releases").json()
@@ -177,7 +183,8 @@ class JWMeetings(rumps.App):
                         time.sleep(3)
                     except Exception as e:
                         print(str(e))
-                        os.system("rm -r Songs")
+                        if x <= 1:
+                            os.system("rm -r Songs")
                         res = rumps.alert("Error", "There was a problem with one of the downloads. Make sure you have a stable internet connection or try again later.\nWould you like to send a report to the developer?", ok="Send Report", cancel="Cancel")
                         if res == 1:
                             recipient = 'edwardsa829@gmail.com'
@@ -192,9 +199,34 @@ class JWMeetings(rumps.App):
             return 0
 
         else:
-            print("Songs are already downloaded!")
-            rumps.alert("Songs are already downloaded!")
+            songs = os.listdir("Songs")
+            if len(songs) >= 151:
+                print("Songs are already downloaded!")
+                rumps.alert("Songs are already downloaded!")
+            else:
+                os.system(f"rm Songs/sjjm_E_{str(len(songs)).zfill(3)}_r720P.mp4")
+                total_songs = 152
+                perc = [15, 30, 50, 75, 80, 95]
+                for x in range(len(songs), total_songs, 1):
+                    for per in perc:
+                        if x == int(per*total_songs/100):
+                            rumps.notification(f"{str(per)}% downloaded", "Downloading songs", "")
 
+                    print(f"Downloading video for song number {x}")
+                    try:
+                        time.sleep(3)
+                        urllib.request.urlretrieve(lines[x], my_file + "Songs/" + lines[x][-21:-1])
+                    except Exception as e:
+                        print(str(e))
+                        res = rumps.alert("Error", "There was a problem with one of the downloads. Make sure you have a stable internet connection or try again later.\nWould you like to send a report to the developer?", ok="Send Report", cancel="Cancel")
+                        if res == 1:
+                            recipient = 'edwardsa829@gmail.com'
+                            subject = 'JW Meeting - Error Report'
+                            body = str(e) + "\n at line {}".format(str(int(get_linenumber())-9))
+                            webbrowser.open('mailto:?to=' + recipient + '&subject=' + subject + '&body=' + body, new=1)
+                            return 0
+                        return 1
+                rumps.alert("Success!", "All the songs were downloaded successfully!")
             return 0
 
 
