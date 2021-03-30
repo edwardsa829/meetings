@@ -115,7 +115,7 @@ class JWMeetings(rumps.App):
         headers = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_2_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36"}
 
         try:
-            response = requests.get(f"https://wol.jw.org/en/wol/dt/r1/lp-e/{schedule}", headers=headers)
+            response = requests.get(f"https://wol.jw.org/en/wol/dt/r1/lp-e/{schedule}", headers=headers, timeout=4)
         except Exception as e:
             print(str(e))
             res = rumps.alert("Error", "Make sure you have an internet connection or try again later.\nWould you like to send a report to the developer?", ok="Send Report", cancel="Cancel")
@@ -369,7 +369,7 @@ class Meetings(object):
 
         headers = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_2_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36"}
 
-        article = requests.get(link, headers=headers)
+        article = requests.get(link, headers=headers, timeout=4)
 
         if article.status_code != 200:
             print("Problem loading article")
@@ -495,7 +495,7 @@ class Meetings(object):
         treasures_link = jw + content[treasures_link : treasures_link + 32]
 
         try:
-            treasures_content = str(requests.get(treasures_link, headers=headers).text)
+            treasures_content = str(requests.get(treasures_link, headers=headers, timeout=4).text)
         except Exception as e:
             print(str(e))
             res = rumps.alert("Error", "There was a problem. Make sure you have an internet connection or try again later.\nWould you like to send a report to the developer?", ok="Send Report", cancel="Cancel")
@@ -543,7 +543,7 @@ class Meetings(object):
                 ministry_link = jw + content[ministry_link : ministry_link + 30]
 
                 try:
-                    ministry_content = str(requests.get(ministry_link, headers=headers).text)
+                    ministry_content = str(requests.get(ministry_link, headers=headers, timeout=4).text)
                     ministry_imgs = [x.start() for x in re.finditer('<img src="', ministry_content)]
                     for link in range(len(ministry_pics)):
                         if ministry_pics[link][0:3] == "/en":
@@ -578,7 +578,7 @@ class Meetings(object):
 
         for link in living_links:
             try:
-                living_content = str(requests.get(link, headers=headers).text)
+                living_content = str(requests.get(link, headers=headers, timeout=4).text)
                 living_imgs = [x.start() for x in re.finditer('<img src="', living_content)]
 
                 for pic in living_imgs:
@@ -626,7 +626,7 @@ class Meetings(object):
         bs_links[0] = bs_links[0].replace('"', "")
 
         try:
-            response1 = str(requests.get(bs_links[0], headers=headers).text)
+            response1 = str(requests.get(bs_links[0], headers=headers, timeout=4).text)
         except Exception as e:
             print(str(e))
             res = rumps.alert("Error", "There was a problem. Make sure you are connected to the internet or try again later.\nWould you like to send a report to the developer?", ok="Send Report", cancel="Cancel")
@@ -687,7 +687,7 @@ class Meetings(object):
         if len(bs_links) > 1:
 
             try:
-                response2 = str(requests.get(bs_links[1], headers=headers).text)
+                response2 = str(requests.get(bs_links[1], headers=headers, timeout=4).text)
             except Exception as e:
                 print(str(e))
                 res = rumps.alert("Error", "There was a problem. Make sure you are connected to the internet or try again later.\nWould you like to send a report to the developer?", ok="Send Report", cancel="Cancel")
