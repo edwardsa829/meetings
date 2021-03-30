@@ -38,6 +38,7 @@ os.system('rm -r .git')
 os.system('rm app.py Icon.icns Logo.png links.txt metadata.py .gitignore requirements.txt')
 os.system('rm install.py')
 os.system('/Applications/Python\ 3.7/Install\ Certificates.command')
+os.system('/Applications/Python\ 3.7/Update\ Shell\ Profile.command')
 print("\n\nINSTALL COMPLETE!\n\n")
 
 
