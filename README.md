@@ -107,7 +107,7 @@ You will find the app towards the right side. By clicking the app's icon a littl
 
 
 #### Download Songs
-Before you start generating playlists you will want to first download all the videos for the songs otherwise they won’t work. You can do this by simply pressing *Download songs* (2nd item in the dropdown menu).
+Before you start generating playlists you will want to first download all the videos for the songs otherwise they won’t work. You can do this by simply pressing *Download Songs* (2nd item in the dropdown menu).
 This process will take quite a while as you are downloading over 150 heavy files. So you will have to wait. The time it takes depends on your internet connection speed. The total download size is 4.5 GB.
 Once download is complete you will be notified. Be sure in the meantime your computer stays on and that you have a stable internet connection. 
 
