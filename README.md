@@ -94,7 +94,7 @@ If you are not used to seeing code you might be asking:
 
 You are running some code that will download some small pieces of software for the application to work and will build it.
 
-Going into a little bit more detail, this command downloads software packages for the Python language which are listed in the *requirements.txt* file which are necessary for the application to function. After that, the code will build making it into a usable app you can then open just by double clicking it. When this is done, all the unnecessary files and folders will be deleted leaving you with just the app and this file you are reading from now. 
+Going into a little bit more detail, this command downloads software packages for the Python language which are listed in the *requirements.txt* file which are necessary for the application to function. After that, the code will build making it into a usable app you can then open just by double clicking it. When this is done, all the unnecessary files and folders will be deleted leaving you with just the app and this file you are reading from now inside the folder. 
 This whole process should take less than a minute.
 You are then free to move the application anywhere you like on your computer. You might want to place it in your *Applications* folder for easy access.
 
@@ -102,7 +102,7 @@ You are then free to move the application anywhere you like on your computer. Yo
 
 #### HOW DO I USE THE APPLICATION?
 
-The way you interact with the application is through the menu bar only.. it’s the bar that runs along the top of your screen where all the menus are (File, Edit, View, ect..).
+The way you interact with the application is through the menu bar only. It’s the bar that runs along the top of your screen where all the menus are (File, Edit, View, ect..).
 You will find the app towards the right side. By clicking the app's icon a little dropdown menu will appear with 4 options.
 
 
