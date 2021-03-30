@@ -10,7 +10,6 @@ import re
 import subprocess
 import plistlib
 import os
-import urllib3
 import webbrowser
 from inspect import currentframe
 
@@ -113,10 +112,10 @@ class JWMeetings(rumps.App):
                 rumps.alert("Error", "There was a problem with the initial song number")
                 return 1
 
+        headers = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_2_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36"}
 
         try:
-            http = urllib3.PoolManager()
-            response = http.request('GET', f"https://wol.jw.org/en/wol/dt/r1/lp-e/{schedule}")
+            response = requests.get(f"https://wol.jw.org/en/wol/dt/r1/lp-e/{schedule}", headers=headers)
         except Exception as e:
             print(str(e))
             res = rumps.alert("Error", "Make sure you have an internet connection or try again later.\nWould you like to send a report to the developer?", ok="Send Report", cancel="Cancel")
@@ -128,12 +127,12 @@ class JWMeetings(rumps.App):
                 return 0
             return 1
 
-        if response.status != 200:
+        if response.status_code != 200:
             print("There was a problem while loading the schedule")
             rumps.alert("Error", "There was a problem while loading the schedule")
             return 1
 
-        content = str(response.data.decode('utf-8'))
+        content = str(response.text)
 
         if today in weekend:
             a = Meetings(content, initial)
@@ -357,9 +356,7 @@ class Meetings(object):
         
         content = self.content
         initial = self.initial
-
         data = [x.start() for x in re.finditer("/en/wol/tc/r1/lp-e/", content[22000:])]
-
 
         if len(data) != 1:
             print("Couldn't find a Song")
@@ -370,15 +367,15 @@ class Meetings(object):
 
         link = "https://wol.jw.org/" + content[wt_data : wt_data + 28]
 
+        headers = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_2_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36"}
 
-        http = urllib3.PoolManager()
-        article = http.request('GET', link)
+        article = requests.get(link, headers=headers)
 
-        if article.status != 200:
+        if article.status_code != 200:
             print("Problem loading article")
             rumps.alert("Error", "There was a problem loading the WT article\nYou will have to download the pictures manually for now. Sorry!")
         else:
-            wt = str(article.data.decode('utf-8'))
+            wt = str(article.text)
 
 
         songs = [x.start() for x in re.finditer("SONG", wt)]
@@ -484,10 +481,10 @@ class Meetings(object):
 
 
         content = self.content
-
-        http = urllib3.PoolManager()
-
+        
         jw = "https://wol.jw.org"
+
+        headers = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_2_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36"}
 
         songs = [x.start() for x in re.finditer("Song", content)]
 
@@ -498,7 +495,7 @@ class Meetings(object):
         treasures_link = jw + content[treasures_link : treasures_link + 32]
 
         try:
-            treasures_content = str(http.request('GET', treasures_link).data.decode('utf-8'))
+            treasures_content = str(requests.get(treasures_link, headers=headers).text)
         except Exception as e:
             print(str(e))
             res = rumps.alert("Error", "There was a problem. Make sure you have an internet connection or try again later.\nWould you like to send a report to the developer?", ok="Send Report", cancel="Cancel")
@@ -509,6 +506,7 @@ class Meetings(object):
                 webbrowser.open('mailto:?to=' + recipient + '&subject=' + subject + '&body=' + body, new=1)
                 return 0
             return 1
+        
 
         treasures_imgs = [x.start() for x in re.finditer('<img src="', treasures_content)]
 
@@ -538,7 +536,6 @@ class Meetings(object):
 
         
         ministry_pics = []
-        http = urllib3.PoolManager()
 
         try:
             for x in range(len(ministry)):
@@ -546,7 +543,7 @@ class Meetings(object):
                 ministry_link = jw + content[ministry_link : ministry_link + 30]
 
                 try:
-                    ministry_content = str(http.request('GET', ministry_link).data.decode('utf-8'))
+                    ministry_content = str(requests.get(ministry_link, headers=headers).text)
                     ministry_imgs = [x.start() for x in re.finditer('<img src="', ministry_content)]
                     for link in range(len(ministry_pics)):
                         if ministry_pics[link][0:3] == "/en":
@@ -581,7 +578,7 @@ class Meetings(object):
 
         for link in living_links:
             try:
-                living_content = str(http.request('GET', link).data.decode('utf-8'))
+                living_content = str(requests.get(link, headers=headers).text)
                 living_imgs = [x.start() for x in re.finditer('<img src="', living_content)]
 
                 for pic in living_imgs:
@@ -629,7 +626,7 @@ class Meetings(object):
         bs_links[0] = bs_links[0].replace('"', "")
 
         try:
-            response1 = str(http.request('GET', bs_links[0]).data.decode('utf-8'))
+            response1 = str(requests.get(bs_links[0], headers=headers).text)
         except Exception as e:
             print(str(e))
             res = rumps.alert("Error", "There was a problem. Make sure you are connected to the internet or try again later.\nWould you like to send a report to the developer?", ok="Send Report", cancel="Cancel")
@@ -690,7 +687,7 @@ class Meetings(object):
         if len(bs_links) > 1:
 
             try:
-                response2 = str(http.request('GET', bs_links[1]).data.decode('utf-8'))
+                response2 = str(requests.get(bs_links[1], headers=headers).text)
             except Exception as e:
                 print(str(e))
                 res = rumps.alert("Error", "There was a problem. Make sure you are connected to the internet or try again later.\nWould you like to send a report to the developer?", ok="Send Report", cancel="Cancel")
