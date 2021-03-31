@@ -25,6 +25,5 @@ jobs:
     - name: Install dependencies
       run: |
         pip3 install --upgrade pip
-        pip3 install -r requirements.txt
     - name: Build app
       run: python3 install.py py2app
