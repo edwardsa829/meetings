@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/python3
 import os
 if os.system('pip3 install -r requirements.txt') == 0:
     print("Downloaded packages")
