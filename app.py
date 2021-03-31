@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash python3
 import rumps
 import datetime
 import requests
