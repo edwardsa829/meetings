@@ -1,5 +1,5 @@
 ```bash
-python3.7 install.py py2app
+python3 install.py py2app
 ```
 ![](./Logo.png)
 # JW Meetings
@@ -13,7 +13,6 @@ If you are a Jehovah’s Witness and use a Mac computer you will know that there
 - [VLC latest version](https://www.videolan.org/vlc/download-macosx.html)
 - [Python 3.7](https://www.python.org/downloads/release/python-379/)
 
-Only Python version 3.7 is currently supported.
 
 > **Please note**: installing and running the application requires an internet connection
 
@@ -27,15 +26,11 @@ Download link: https://www.python.org/ftp/python/3.7.9/python-3.7.9-macosx10.9.p
 
 
 
-
-Make sure you download all the song videos by pressing *Download Songs* before you generate the playlist otherwise they will not work!
-You only have to do this once.
-
-Song videos are all downloaded in the highest quality available - **720p**.
-Pictures are all streamed, not downloaded.
+Songs and videos are all downloaded in the highest quality available - **720p**.
+Pictures are streamed.
 
 
-Some have reported images not ‘playing’ due to VPN.
+Some have reported images not working due to VPN.
 
 
 
@@ -51,7 +46,7 @@ You will see a green button called “Code”. Press it and then select “Downl
 Run the command:
 
 ```bash
-python3.7 install.py py2app
+python3 install.py py2app
 ```
 
 And in a minute the application is ready for use!
@@ -66,7 +61,7 @@ If you downloaded the code in zip you will want to unzip it just by double click
 
 - press *New Terminal at Folder*
 
-- copy and paste into Terminal: `python3.7 install.py py2app`
+- copy and paste into Terminal: `python3 install.py py2app`
 
 - press enter and wait
 
@@ -81,7 +76,7 @@ cd Downloads/JWMeetings-main/
 
 - press enter
 
-- copy and paste in the command: `python3.7 install.py py2app`
+- copy and paste in the command: `python3 install.py py2app`
 
 - press enter and wait
 
@@ -94,13 +89,13 @@ If you are not used to seeing code you might be asking:
 
 You are running some code that will download some small pieces of software for the application to work and will build it.
 
-Going into a little bit more detail, this command downloads software packages for the Python language which are listed in the *requirements.txt* file which are necessary for the application to function. After that, the code will build making it into a usable app you can then open just by double clicking it. When this is done, all the unnecessary files and folders will be deleted leaving you with just the app and this file you are reading from now inside the folder. 
-This whole process should take less than a minute.
+Going into a little bit more detail, this command downloads software packages for the Python language which are listed in the *requirements.txt* file which are necessary for the application to function. After that, the code will build making it into a usable app you can then open just by double clicking it. When this is done, all the unnecessary files and folders will be deleted leaving you with just the app. 
+This whole process should take a minute or less.
 You are then free to move the application anywhere you like on your computer. You might want to place it in your *Applications* folder for easy access.
 
 
 
-#### HOW DO I USE THE APPLICATION?
+### HOW DO I USE THE APPLICATION?
 
 The way you interact with the application is through the menu bar only. It’s the bar that runs along the top of your screen where all the menus are (File, Edit, View, ect..).
 You will find the app towards the right side. By clicking the app's icon a little dropdown menu will appear with 4 options.
@@ -112,10 +107,10 @@ This process will take quite a while as you are downloading over 150 heavy files
 Once download is complete you will be notified. Be sure in the meantime your computer stays on and that you have a stable internet connection. 
 
 #### Generate Playlist
-Now that you have downloaded all the songs you can press this 1st button in the menu and your playlist will be created. This process will take a few seconds. The playlist will contain all the media for the meeting of the current week also depending whether you are in the middle of the week or at the weekend (Saturday, Sunday). For the weekend meetings you will be asked for the initial song which you can then just type in the number and press “Ok”.
+Now that you have downloaded all the songs you can press this 1st button in the menu and your playlist will be created. This process will take 20 seconds or less. The playlist will contain all the media for the meeting of the current week also depending whether you are in the middle of the week or at the weekend (Saturday, Sunday). For the weekend meetings you will be asked for the initial song which you can then just type in the number and press “Ok”.
 
 #### Software Update
-This 3rd button checks to see if there are any new versions of the application to download. These could be changes such as new features or bug fixes. Making these changes just requires accepting the download and quitting and reopening the app.
+This 3rd button checks to see if there are any new versions of the application to download. These could be changes such as new features or bug fixes. Making these changes just requires accepting the download and then restarting the app.
 
 #### Quit
 This last button closes the app.

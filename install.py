@@ -1,6 +1,6 @@
 #!/bin/bash
 import os
-if os.system('python3.7 -m pip install -r requirements.txt') == 0:
+if os.system('pip3 install -r requirements.txt') == 0:
     print("Downloaded packages")
 else:
     print("\nERROR: Make sure you are connected to the internet!\n")
@@ -31,14 +31,13 @@ setup(
     install_requires=metadata.REQUIREMENTS
 )
 
+for x in range(10):
+    os.system(f'/Applications/Python\ 3.{x}/Install\ Certificates.command')
+    os.system(f'/Applications/Python\ 3.{x}/Update\ Shell\ Profile.command')
 
-os.system('mv dist/JW\ Meetings.app .')
-os.system('rm -r build __pycache__ .eggs dist')
-os.system('rm -r .git')
-os.system('rm app.py Icon.icns Logo.png links.txt metadata.py .gitignore requirements.txt')
-os.system('rm install.py')
-os.system('/Applications/Python\ 3.7/Install\ Certificates.command')
-os.system('/Applications/Python\ 3.7/Update\ Shell\ Profile.command')
+os.system('mv dist/JW\ Meetings.app ..')
+os.system('cd .. && rm JWMeetings-main.zip && rm -r JWMeetings-main')
+
 print("\n\nINSTALL COMPLETE!\n\n")
 
 
