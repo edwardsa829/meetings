@@ -232,7 +232,6 @@ class JWMeetings(rumps.App):
     @rumps.clicked("Software Update          ")
     def updates(self, _):
 
-
         try:
             response = requests.get("https://api.github.com/repos/edwardsa829/JWMeetings/releases").json()
             latest = response[0]["tag_name"]
