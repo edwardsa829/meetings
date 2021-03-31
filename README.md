@@ -1,5 +1,5 @@
 ```bash
-python3 install.py py2app
+python3.7 install.py py2app
 ```
 ![](./Logo.png)
 # JW Meetings
@@ -46,7 +46,7 @@ You will see a green button called “Code”. Press it and then select “Downl
 Run the command:
 
 ```bash
-python3 install.py py2app
+python3.7 install.py py2app
 ```
 
 And in a minute the application is ready for use!
@@ -61,7 +61,7 @@ If you downloaded the code in zip you will want to unzip it just by double click
 
 - press *New Terminal at Folder*
 
-- copy and paste into Terminal: `python3 install.py py2app`
+- copy and paste into Terminal: `python3.7 install.py py2app`
 
 - press enter and wait
 
@@ -76,7 +76,7 @@ cd Downloads/JWMeetings-main/
 
 - press enter
 
-- copy and paste in the command: `python3 install.py py2app`
+- copy and paste in the command: `python3.7 install.py py2app`
 
 - press enter and wait
 
