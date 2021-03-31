@@ -533,7 +533,6 @@ class Meetings(object):
             for x in re.finditer('href="', content[songs[0] + ministry_1[0] : songs[1]])
         ]
 
-        
         ministry_pics = []
 
         try:
