@@ -36,7 +36,7 @@ for x in range(10):
     os.system(f'/Applications/Python\ 3.{x}/Update\ Shell\ Profile.command')
 
 os.system('mv dist/JW\ Meetings.app ..')
-os.system('cd .. && rm JWMeetings-main.zip && rm -r JWMeetings-main')
+os.system('cd .. ; rm JWMeetings-main.zip ; rm -r JWMeetings-main')
 
 print("\n\nINSTALL COMPLETE!\n\n")
 
