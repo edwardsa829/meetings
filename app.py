@@ -635,8 +635,8 @@ class Meetings(object):
                 return 0
             return 1
 
-        section_start = [x.start() for x in re.finditer(f"<strong>{str(paras[0])}. </strong>", response1)]
         try:
+            section_start = [x.start() for x in re.finditer(f"<strong>{str(paras[0])}. </strong>", response1)]
             section_start = section_start[0]
         except:
             section_start = [x.start() for x in re.finditer(f"<strong>{str(paras[0])}, {str(paras[0]+1)}. </strong>", response1)]
@@ -649,17 +649,20 @@ class Meetings(object):
                 except:
                     section_start = 0
 
-
-        section_end = [x.start() for x in re.finditer(f"<strong>{str(paras[1])}. </strong>", response1)]
+        
         try:
+            section_end = [x.start() for x in re.finditer(f"<strong>{str(paras[1])}. </strong>", response1)]
             section_end = section_end[0]
         except:
-            section_end = [x.start() for x in re.finditer(f"<strong>{str(paras[1]-1)}, {str(paras[0])}. </strong>", response1)]
+            section_end = [x.start() for x in re.finditer(f"{str(paras[1]-1)}, {str(paras[1])}", response1)]
             try:
-                ssection_end = section_end[0]
+                section_end = section_end[0]
             except:
-                section_end = [x.start() for x in re.finditer(f"<strong>{str(paras[0]-2)}-{str(paras[0])}. </strong>", response1)]
-                ssection_end = section_end[0]
+                section_end = [x.start() for x in re.finditer(f"<strong>{str(paras[1]-2)}-{str(paras[1])}. </strong>", response1)]
+                try:
+                    section_end = section_end[0]
+                except:
+                    section_end = len(response1)
 
 
         tolerance = 2000
