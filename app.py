@@ -414,7 +414,7 @@ class Meetings(object):
                 cf = currentframe()
                 return cf.f_back.f_lineno
 
-
+                
 
             if len(song_nums) != 3:
                 print("Problem fetching song numbers")
@@ -477,7 +477,6 @@ class Meetings(object):
             return 0
 
 
-
         content = self.content
         
         jw = "https://wol.jw.org"
@@ -517,7 +516,9 @@ class Meetings(object):
             if treasures_pics[link][0:3] == "/en":
                 treasures_pics[link] = jw + treasures_pics[link]
             else:
-                treasures_pics.remove(treasures_pics[link])
+                treasures_pics[link] = None
+
+        treasures_pics = list(filter(None, treasures_pics))
 
         ministry_1 = [
             x.start()
@@ -546,7 +547,9 @@ class Meetings(object):
                         if ministry_pics[link][0:3] == "/en":
                             ministry_pics[link] = jw + ministry_pics[link]
                         else:
-                            ministry_pics[link].remove(ministry_pics[link])
+                            ministry_pics[link] = None
+
+                    ministry_pics = list(filter(None, ministry_pics))
 
                     for pic in ministry_imgs:
                         ministry_pics.append(ministry_content[pic + 10 : pic + 43])
@@ -572,6 +575,7 @@ class Meetings(object):
             )
 
         living_pics = []
+        
 
         for link in living_links:
             try:
@@ -583,11 +587,14 @@ class Meetings(object):
             except:
                 pass
 
+        
         for link in range(len(living_pics)):
             if living_pics[link][0:3] == "/en":
                 living_pics[link] = jw + living_pics[link]
             else:
-                living_pics.remove(living_pics[link])
+                living_pics[link] = None
+        
+        living_pics = list(filter(None, living_pics))
 
         cc = [x.start() for x in re.finditer("Concluding Comments", content)]
 
